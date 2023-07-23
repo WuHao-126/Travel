@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.Travel.dao.mapper.UserMapper">
+    <update id="addGrade">
+        update tb_admin set grade=grade+1 where id=#{id};
+    </update>
+
+    <update id="addExperience">
+        update tb_admin set experience=experience+10 where id=#{id};
+    </update>
+    <update id="updateUserInformation">
+        update tb_admin set nickName=#{nickName},userPhoto=#{userPhoto} where id=#{id}
+    </update>
+</mapper>

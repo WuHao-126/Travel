@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ注册</title>
+    <link rel="shortcut icon" href="../F%7DQG%60G%25D%7BN(W%60F%7DF%5DX)ST1Q.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../vue/vue.js"></script>
+    <script src="../vue/axios-0.18.0.js"></script>
+</head>
+<body>
+<div id="app">
+    <header>
+    <div class="fl_img"><img src="../img/BXUG%60)%25%5D4$%5D1%60%60DR5U%7D5HK0.png" alt=""></div>
+    <div class="register_box">
+        <div class="QQ_shortcut">
+            <ul>
+                <li><a href="#">意见反馈</a></li>
+                <li><a href="#">简体中文</a></li>
+                <li><a href="#"><img src="../img/QQ20211018125757.png" alt=""></a></li>
+            </ul>
+
+        </div>
+        <h1>欢迎注册QQ</h1>
+        <h3> 每一天，乐在沟通</h3><br>
+        <div class="button">
+            <input id="text1" type="text" placeholder="昵称"><br>
+            <p id="text3">请输入正确的昵称！</p>
+            <input id="text2"   type="password" placeholder="密码"><br>
+            <p id="text4">请输入正确的密码！</p>
+            <select>
+                <option value="">+86</option>
+                <option value="">+852</option>
+                <option value="">+853</option>
+                <option value="">+886</option>
+            </select>
+            <input type="text" class="one" placeholder="手机号码">
+            <div class="remind">可以通过该手机找回密码</div>
+            <button id="register">立即注册</button><br>
+            <div class="box"><label><input class="checkbox" type="checkbox">我已阅读并同意相关服务条款和隐私政策</label></div>
+            <div class="botton">Copyright © 1998-2021Tencent All Rights Reserved</div>
+        </div>
+    </div>
+</header>
+</div>
+</body>
+<script>
+     var len=document.getElementById("text1");
+     var p=document.getElementById("text3");
+     var p1=document.getElementById("text4");
+     var pass=document.getElementById("text2");
+     var register=document.getElementById("register");
+     len.onchange=function(){
+        if(len.value.length>10||len.value.length<5){
+             p.style.opacity=1;
+        }else{
+            p.style.opacity=0;
+        }
+     }
+     pass.onchange=function(){
+        if(pass.value.length<8){
+             p1.style.opacity=1;
+        }else{
+            p1.style.opacity=0;
+        }  
+     }
+     register.onclick=function(){
+        if(len.value.length>10||len.value.length<5||pass.value.length<8){
+            alert("注册失败");
+        } else{
+            alert("注册成功，欢迎使用QQ");
+        }
+    }
+    var vue=new Vue({
+        el:'#app',
+        mounted(){
+
+        },
+        method(){
+
+        },
+        data(){
+
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.Travel.dao.mapper.CommentMapper">
+    <insert id="addRouteComment">
+        insert into tb_comment_route values (null,#{comment.get})
+    </insert>
+
+    <select id="selectScenicComment" resultType="com.Travel.dao.pojo.Comment">
+        select * from tb_comment_scenic where article_id=#{id} and level=1;
+    </select>
+    <select id="selectRouteComment" resultType="com.Travel.dao.pojo.Comment">
+        select * from tb_comment_route where article_id=#{id} and level=1 order by create_date desc;
+    </select>
+    <select id="selectBlogComment" resultType="com.Travel.dao.pojo.Comment">
+        select * from tb_comment_blog where article_id=#{id} and level=1 order by create_date desc;
+    </select>
+    <select id="selectRouteChilderComment" resultType="com.Travel.dao.pojo.Comment">
+          select * from tb_comment_route where parent_id=#{id} and level=2 order by create_date desc;
+    </select>
+    <select id="selectBlogChilderComment" resultType="com.Travel.dao.pojo.Comment">
+        select * from tb_comment_blog where parent_id=#{id} and level=2 order by create_date desc;
+    </select>
+</mapper>

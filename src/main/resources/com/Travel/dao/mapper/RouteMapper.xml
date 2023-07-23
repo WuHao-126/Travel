@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.Travel.dao.mapper.RouteMapper">
+
+    <update id="addDetailedRouteViews">
+        update tb_route set views=views+1 where id=#{id};
+    </update>
+    <select id="aimSelectRoute" resultType="com.Travel.dao.pojo.Route">
+        select * 
+        from tb_route
+        where 
+        <choose>
+            <when test="start!=null">
+                start=#{start}
+            </when>
+
+            <when test="road!=null">
+               and road like #{road}
+            </when>
+            <when test="end!=null">
+               and end=#{end}
+            </when>
+            <otherwise>
+                1=1
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

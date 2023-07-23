@@ -1,0 +1,21 @@
+spring:
+  redis:
+    host: 43.142.56.13
+    port: 6379
+  datasource:
+    url: jdbc:mysql://localhost:3306/travel?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: 1345498749...
+    driver-class-name: com.mysql.cj.jdbc.Driver
+server:
+  port: 8003
+
+qiniu:
+  accessKey: 1JqiPI4GqzwD0zmereMXlz9s3OAf-QEdRO0qHDgp
+  accessSecretKey: YfPXZe21CQ3bCKljv8ymuhGuHHG_5MkchW2y4oxt
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false
+
