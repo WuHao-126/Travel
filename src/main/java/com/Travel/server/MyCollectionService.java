@@ -43,4 +43,8 @@ public interface MyCollectionService extends IService<MyCollection> {
      * @return
      */
     Result deleteCollection(Integer id);
+
+    Result getUserCollectionScenic(CollectionParam collectionParam);
+
+    Result getUserCollectionRouter(CollectionParam collectionParam);
 }

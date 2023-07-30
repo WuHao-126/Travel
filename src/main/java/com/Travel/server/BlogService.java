@@ -3,8 +3,12 @@ package com.Travel.server;
 import com.Travel.dao.pojo.Blog;
 import com.Travel.vo.BlogVo;
 import com.Travel.vo.Result;
+import com.Travel.vo.param.DeleteBlogParam;
+import com.Travel.vo.param.IdParam;
 import com.Travel.vo.param.PageParam;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface BlogService extends IService<Blog> {
     /**
@@ -53,4 +57,13 @@ public interface BlogService extends IService<Blog> {
      * @return
      */
     Result UserGradeArrange();
+
+    /**
+     * 根据用户id搜索博客
+     * @param idParam
+     * @return
+     */
+    Result selectBlogByUserId(IdParam idParam);
+
+    Result deleteBlog(DeleteBlogParam deleteBlogParam, HttpServletRequest request);
 }

@@ -2,6 +2,7 @@ package com.Travel.server;
 
 import com.Travel.dao.pojo.Scenic;
 import com.Travel.vo.Result;
+import com.Travel.vo.param.CollectionParam;
 import com.Travel.vo.param.PageParam;
 import com.Travel.vo.param.ScenicParam;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -69,4 +70,5 @@ public interface ScenicService extends IService<Scenic> {
      * @return
      */
     Result selectScenicName(ScenicParam scenicParam);
+
 }

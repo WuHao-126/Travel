@@ -4,4 +4,12 @@
 
 <mapper namespace="com.Travel.dao.mapper.MyCollectionMapper">
 
+    <select id="getUserCollectionScenic" resultType="com.Travel.dao.pojo.Scenic">
+        select id,sname from tb_scenic where id in (select productId from tb_collection where userId=#{userId} and type=#{type})
+        limit #{currentPage},#{pageSize}
+    </select>
+    <select id="getUserCollectionRouter" resultType="com.Travel.dao.pojo.Route">
+        select id,start,end from tb_route where id in (select productId from tb_collection where userId=#{userId} and type=#{type})
+        limit #{currentPage},#{pageSize}
+    </select>
 </mapper>

@@ -34,6 +34,14 @@ public class MyCollectionController {
         return  myCollectionService.deleteCollection(id);
     }
 
+    @PostMapping("/colsceinc")
+    public Result getUserCollectionScenic(@RequestBody CollectionParam collectionParam){
+        return myCollectionService.getUserCollectionScenic(collectionParam);
+    }
+    @PostMapping("/colrouter")
+    public Result getUserCollectionRouter(@RequestBody CollectionParam collectionParam){
+        return myCollectionService.getUserCollectionRouter(collectionParam);
+    }
 
 
     @PostMapping("/blog")

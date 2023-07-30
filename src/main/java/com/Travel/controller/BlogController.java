@@ -4,10 +4,14 @@ import com.Travel.dao.pojo.Blog;
 import com.Travel.server.BlogService;
 import com.Travel.vo.BlogVo;
 import com.Travel.vo.Result;
+import com.Travel.vo.param.DeleteBlogParam;
+import com.Travel.vo.param.IdParam;
 import com.Travel.vo.param.PageParam;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Api
@@ -36,6 +40,20 @@ public class BlogController {
         return blogService.selectnewBlog(pageParam);
     }
 
+    @PostMapping("delete")
+    public Result deleteBlog(@RequestBody DeleteBlogParam deleteBlogParam, HttpServletRequest request){
+        return blogService.deleteBlog(deleteBlogParam,request);
+    }
+
+    @PostMapping("/userid")
+    public Result selectBlogByUserId(@RequestBody IdParam idParam){
+        return blogService.selectBlogByUserId(idParam);
+    }
+    /**
+     * 添加博客
+     * @param blog
+     * @return
+     */
     @PostMapping()
     public Result addBlog(@RequestBody Blog blog){
         return blogService.addBlog(blog);
@@ -59,6 +77,11 @@ public class BlogController {
     public Result selectTitleBlog(@PathVariable("title") String title){
         return blogService.selectTitleBlog(title);
     }
+
+    /**
+     * 博客总数
+     * @return
+     */
     @GetMapping("/total")
     public Result blogTotal(){
         return blogService.blogTotal();

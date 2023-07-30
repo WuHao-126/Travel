@@ -7,11 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("tb_route")
-public class Route {
+public class Route implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String start;

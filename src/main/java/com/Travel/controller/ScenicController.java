@@ -3,6 +3,7 @@ package com.Travel.controller;
 import com.Travel.dao.pojo.Scenic;
 import com.Travel.server.ScenicService;
 import com.Travel.vo.Result;
+import com.Travel.vo.param.CollectionParam;
 import com.Travel.vo.param.PageParam;
 import com.Travel.vo.param.ScenicParam;
 import io.swagger.annotations.Api;
@@ -23,7 +24,7 @@ public class ScenicController {
      * TODO 添加景区信息
      * @return
      */
-    @PostMapping
+    @PostMapping()
     public Result addScenic(@RequestBody Scenic scenic){
         return scenicService.addScennic(scenic);
     }
@@ -47,6 +48,12 @@ public class ScenicController {
     public Scenic selectById(@PathVariable("id") Integer id){
         return scenicService.selectById(id);
     }
+
+    /**
+     * 根据景区名称搜索
+     * @param sname
+     * @return
+     */
     @GetMapping("search/{sname}")
     public Result selectSName(@PathVariable("sname") String sname){
        return scenicService.selectSName(sname);
@@ -61,7 +68,7 @@ public class ScenicController {
     }
 
     /**
-     * TODO 根据ID查询景区
+     * 根据ID删除景区
      * @param id
      * @return
      */
@@ -71,7 +78,7 @@ public class ScenicController {
     }
 
     /**
-     * TODO 修改景区
+     *  修改景区
      * @param scenic
      * @return
      */
@@ -80,14 +87,21 @@ public class ScenicController {
         return scenicService.updateScenic(scenic);
     }
 
+    /**
+     *
+     * @param scenicName
+     * @param pageParam
+     * @return
+     */
     @PostMapping("/regio/{scenicName}")
     public Result selectRegio(@PathVariable("scenicName") String scenicName,@RequestBody PageParam pageParam){
         return scenicService.selectRegio(scenicName,pageParam);
     }
-    @PostMapping("scenicName")
+    @PostMapping("/scenicName")
     public Result selectScenicName(@RequestBody ScenicParam scenicParam){
         return scenicService.selectScenicName(scenicParam);
     }
+
 
     
 }

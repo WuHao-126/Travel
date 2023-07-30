@@ -125,6 +125,26 @@ public class MyCollectionServiceimpl extends ServiceImpl<MyCollectionMapper, MyC
         }
     }
 
+    @Override
+    public Result getUserCollectionScenic(CollectionParam collectionParam) {
+        Integer userId = collectionParam.getUserId();
+        if(userId<=0){
+            throw new RuntimeException("查询用户收藏,用户id出错："+userId);
+        }
+        List<Scenic> userCollectionBlog = myCollectionMapper.getUserCollectionScenic(collectionParam);
+        return Result.success(userCollectionBlog);
+    }
+
+    @Override
+    public Result getUserCollectionRouter(CollectionParam collectionParam) {
+        Integer userId = collectionParam.getUserId();
+        if(userId<=0){
+            throw new RuntimeException("查询用户收藏,用户id出错："+userId);
+        }
+        List<Route> userCollectionRoute = myCollectionMapper.getUserCollectionRouter(collectionParam);
+        return Result.success(userCollectionRoute);
+    }
+
     public <T> List<CollectionVo<T>> copyList(List<MyCollection> myCollectionList,T t){
         List<CollectionVo<T>> collectionVos=new ArrayList<>();
         for (MyCollection myCollection : myCollectionList) {

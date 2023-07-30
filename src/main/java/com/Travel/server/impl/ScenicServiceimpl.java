@@ -5,6 +5,7 @@ import com.Travel.dao.pojo.Scenic;
 import com.Travel.server.ScenicService;
 import com.Travel.vo.ErrorCode;
 import com.Travel.vo.Result;
+import com.Travel.vo.param.CollectionParam;
 import com.Travel.vo.param.PageParam;
 import com.Travel.vo.param.ScenicParam;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -128,5 +129,6 @@ public class ScenicServiceimpl extends ServiceImpl<ScenicMapper, Scenic> impleme
         }
         return Result.fail(ErrorCode.NO_DATE.getCode(),ErrorCode.NO_DATE.getMsg());
     }
+
 
 }
