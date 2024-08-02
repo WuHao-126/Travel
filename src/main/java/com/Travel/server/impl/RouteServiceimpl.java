@@ -2,18 +2,16 @@ package com.Travel.server.impl;
 
 import com.Travel.dao.mapper.RouteMapper;
 import com.Travel.dao.pojo.Route;
-import com.Travel.dao.pojo.Scenic;
 import com.Travel.server.RouteService;
 import com.Travel.vo.ErrorCode;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.PageParam;
-import com.Travel.vo.param.RouteParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.route.RouteParam;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

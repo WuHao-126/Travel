@@ -4,9 +4,10 @@ import com.Travel.dao.pojo.Blog;
 import com.Travel.server.BlogService;
 import com.Travel.vo.BlogVo;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.DeleteBlogParam;
-import com.Travel.vo.param.IdParam;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.blog.DeleteBlogParam;
+import com.Travel.vo.param.blog.FeedBlogParam;
+import com.Travel.vo.param.common.IdParam;
+import com.Travel.vo.param.common.PageParam;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -55,8 +56,11 @@ public class BlogController {
      * @return
      */
     @PostMapping()
-    public Result addBlog(@RequestBody Blog blog){
-        return blogService.addBlog(blog);
+    public Result addBlog(@RequestBody Blog blog,HttpServletRequest servletRequest){
+        if(blog==null){
+            throw new RuntimeException("添加博客参数错误");
+        }
+        return blogService.addBlog(blog,servletRequest);
     }
     /**
      * 搜索单个博客
@@ -94,6 +98,14 @@ public class BlogController {
     @GetMapping("/arrange")
     public Result userGradeArrange(){
         return blogService.UserGradeArrange();
+    }
+
+    @PostMapping("/feed/blog")
+    public Result feedBlog(@RequestBody FeedBlogParam feedBlogParam, HttpServletRequest servletRequest){
+        Long max = feedBlogParam.getMax();
+        Integer offset = feedBlogParam.getOffset();
+        Integer pageSize = feedBlogParam.getPageSize();
+        return blogService.feedBlog(max,offset,pageSize,servletRequest);
     }
 
 }

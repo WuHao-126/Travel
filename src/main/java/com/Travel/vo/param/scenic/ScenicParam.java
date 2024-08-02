@@ -1,4 +1,4 @@
-package com.Travel.vo.param;
+package com.Travel.vo.param.scenic;
 
 import lombok.Data;
 

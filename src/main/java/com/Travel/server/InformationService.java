@@ -1,9 +1,9 @@
 package com.Travel.server;
 
 import com.Travel.dao.pojo.Information;
-import com.Travel.dao.pojo.Scenic;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.information.InformationQuery;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 public interface InformationService extends IService<Information> {
@@ -15,11 +15,11 @@ public interface InformationService extends IService<Information> {
     Result addInformation(Information information);
 
     /**
-     * 根据分页参数搜索资讯
-     * @param pageParam
+     * 条件查询资讯列表
+     * @param informationQuery
      * @return
      */
-    Result selectAllInformation(PageParam pageParam);
+    Result searchInformation(InformationQuery informationQuery);
 
     /**
      * 根据id删除资讯
@@ -35,12 +35,6 @@ public interface InformationService extends IService<Information> {
      */
     Result updateInformation(Information information);
 
-    /**
-     * 根据id搜索资讯
-     * @param id
-     * @return
-     */
-    Result selectByIdInformation(Integer id);
 
     /**
      * 搜索热门资讯
@@ -48,24 +42,5 @@ public interface InformationService extends IService<Information> {
      */
     Result selectHotInformation();
 
-    /**
-     * 根据分页参数搜索站内资讯
-     * @param pageParam
-     * @return
-     */
-    Result selectWithinInformation(PageParam pageParam);
-
-    /**
-     * 根据分页参数搜索站外资讯
-     * @param pageParam
-     * @return
-     */
-    Result selectOutsideInformation(PageParam pageParam);
-
-    /**
-     * 根据资讯标题搜索资讯
-     * @param title
-     * @return
-     */
-    Result selectTitle(String title);
+    Result addView(Integer id);
 }

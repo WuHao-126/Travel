@@ -1,7 +1,7 @@
 package com.Travel.dao.mapper;
 
 import com.Travel.dao.pojo.Comment;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.PageParam;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.web.bind.annotation.RequestBody;

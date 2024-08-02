@@ -1,10 +1,9 @@
 package com.Travel.server;
 
 import com.Travel.dao.pojo.Route;
-import com.Travel.dao.pojo.Scenic;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.PageParam;
-import com.Travel.vo.param.RouteParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.route.RouteParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 public interface RouteService extends IService<Route> {

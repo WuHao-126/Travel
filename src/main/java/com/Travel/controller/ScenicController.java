@@ -3,15 +3,12 @@ package com.Travel.controller;
 import com.Travel.dao.pojo.Scenic;
 import com.Travel.server.ScenicService;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.CollectionParam;
-import com.Travel.vo.param.PageParam;
-import com.Travel.vo.param.ScenicParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.scenic.ScenicParam;
+import com.Travel.vo.param.scenic.ScenicQuery;
 import io.swagger.annotations.Api;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 @RestController
 @Api
@@ -49,6 +46,13 @@ public class ScenicController {
         return scenicService.selectById(id);
     }
 
+    @PostMapping("/search")
+    public Result searchScenic(@RequestBody ScenicQuery scenicQuery){
+        if(scenicQuery==null){
+            throw new RuntimeException("景区查询参数为空");
+        }
+        return scenicService.searchScenic(scenicQuery);
+    }
     /**
      * 根据景区名称搜索
      * @param sname

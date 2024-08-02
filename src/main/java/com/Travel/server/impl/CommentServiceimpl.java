@@ -6,15 +6,13 @@ import com.Travel.dao.pojo.Comment;
 
 import com.Travel.server.CommentService;
 import com.Travel.server.UserService;
-import com.Travel.util.JWTUtils;
 import com.Travel.vo.*;
-import com.Travel.vo.param.CommentParam;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.CommentParam;
+import com.Travel.vo.param.common.PageParam;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;

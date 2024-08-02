@@ -1,9 +1,9 @@
 package com.Travel.server;
 
 import com.Travel.dao.pojo.Comment;
-import com.Travel.vo.param.CommentParam;
+import com.Travel.vo.param.common.CommentParam;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.PageParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;

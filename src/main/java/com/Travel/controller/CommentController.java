@@ -1,10 +1,10 @@
 package com.Travel.controller;
 
 import com.Travel.server.CommentService;
-import com.Travel.vo.param.CommentParam;
+import com.Travel.vo.param.common.CommentParam;
 import com.Travel.vo.Result;
 import com.Travel.vo.SystemConstants;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.PageParam;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

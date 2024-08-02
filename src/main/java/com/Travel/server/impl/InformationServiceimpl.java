@@ -1,21 +1,20 @@
 package com.Travel.server.impl;
 
 import com.Travel.dao.mapper.InformationMapper;
-import com.Travel.dao.mapper.ScenicMapper;
 import com.Travel.dao.pojo.Information;
-import com.Travel.dao.pojo.Route;
-import com.Travel.dao.pojo.Scenic;
 import com.Travel.server.InformationService;
-import com.Travel.server.ScenicService;
 import com.Travel.vo.ErrorCode;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.information.InformationQuery;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,18 +33,33 @@ public class InformationServiceimpl extends ServiceImpl<InformationMapper, Infor
     }
 
     @Override
-    public Result selectAllInformation(PageParam pageParam) {
-        Page<Information> page = query().page(new Page<>(pageParam.getCurrentPage(), pageParam.getPageSize()));
-        List<Information> list = page.getRecords();
-        if(list!=null){
-            return Result.success(list);
-        }else{
-            return Result.fail(ErrorCode.NO_DATE.getCode(),ErrorCode.NO_DATE.getMsg());
+    public Result searchInformation(InformationQuery informationQuery) {
+        Integer id = informationQuery.getId();
+        String title = informationQuery.getTitle();
+        String type = informationQuery.getType();
+        Integer currentPage = informationQuery.getCurrentPage();
+        Integer pageSize = informationQuery.getPageSize();
+        Date startTime = informationQuery.getStartTime();
+        Date endTime = informationQuery.getEndTime();
+        if (id!=null){
+            Information information = query().eq("id", id).one();
+            return Result.success(information);
         }
+        QueryWrapper<Information> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq(id!=null,"id",id);
+        queryWrapper.like(!StringUtils.isBlank(title),"title",title);
+        queryWrapper.eq(!StringUtils.isBlank(type),"type",type);
+        queryWrapper.between(startTime!=null && endTime!=null,"publicTime",startTime,endTime);
+        queryWrapper.orderByDesc("publicTime");
+        List<Information> records = informationMapper.selectPage(new Page<Information>(currentPage, pageSize), queryWrapper).getRecords();
+        return Result.success(records);
     }
 
     @Override
     public Result deleteInformation(Integer id) {
+        if(id==null){
+            throw new RuntimeException("删除资讯参数错误id："+id);
+        }
         boolean flag = removeById(id);
         if(flag){
             return Result.success(null);
@@ -60,21 +74,11 @@ public class InformationServiceimpl extends ServiceImpl<InformationMapper, Infor
         if(id==null){
             return Result.fail(ErrorCode.PARAMS_EMPTY.getCode(),ErrorCode.PARAMS_EMPTY.getMsg());
         }
-        System.out.println(information.getDetailedText_html());
         boolean flag = updateById(information);
         if(flag){
             return Result.success(null);
         }
         return Result.fail(ErrorCode.UPDATE_ERROR.getCode(),ErrorCode.UPDATE_ERROR.getMsg());
-    }
-
-    @Override
-    public Result selectByIdInformation(Integer id) {
-        Information information = informationMapper.selectById(id);
-        if(information!=null){
-            return Result.success(information);
-        }
-        return Result.fail(ErrorCode.NO_DATE.getCode(),ErrorCode.NO_DATE.getMsg());
     }
 
     @Override
@@ -89,36 +93,17 @@ public class InformationServiceimpl extends ServiceImpl<InformationMapper, Infor
     }
 
     @Override
-    public Result selectWithinInformation(PageParam pageParam) {
-        Page<Information> page = query().eq("type","站内新闻").page(new Page<Information>(pageParam.getCurrentPage(), pageParam.getPageSize()));
-        List<Information> records = page.getRecords();
-        if(records!=null){
-            return Result.success(records);
-        }else{
-            return Result.fail(ErrorCode.NO_DATE.getCode(),ErrorCode.NO_DATE.getMsg());
+    public Result addView(Integer id) {
+        Information information = query().eq("id", id).one();
+        if(information==null){
+            throw new RuntimeException("资讯不存在id:"+id);
         }
-    }
-    @Override
-    public Result selectOutsideInformation(PageParam pageParam) {
-        Page<Information> page = query().eq("type","站外新闻").page(new Page<Information>(pageParam.getCurrentPage(), pageParam.getPageSize()));
-        List<Information> records = page.getRecords();
-        if(records!=null){
-            return Result.success(records);
-        }else{
-            return Result.fail(ErrorCode.NO_DATE.getCode(),ErrorCode.NO_DATE.getMsg());
+        information.setViews(information.getViews()+1);
+        boolean b = updateById(information);
+        if(b){
+            return Result.success(null);
         }
+        return Result.fail(ErrorCode.UPDATE_ERROR.getCode(),ErrorCode.UPDATE_ERROR.getMsg());
     }
 
-    @Override
-    public Result selectTitle(String title) {
-        if("".equals(title) || title==null){
-            return Result.fail(ErrorCode.PARAMS_EMPTY.getCode(),ErrorCode.PARAMS_EMPTY.getMsg());
-        }
-        List<Information> list = query().eq("title", title).list();
-        if(list!=null){
-            return Result.success(list);
-        }else{
-            return Result.fail(ErrorCode.NO_DATE.getCode(),ErrorCode.NO_DATE.getMsg());
-        }
-    }
 }

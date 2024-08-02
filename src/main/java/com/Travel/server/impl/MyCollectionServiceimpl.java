@@ -1,30 +1,24 @@
 package com.Travel.server.impl;
 
 import com.Travel.dao.mapper.MyCollectionMapper;
-import com.Travel.dao.mapper.UserMapper;
 import com.Travel.dao.pojo.MyCollection;
 import com.Travel.dao.pojo.Route;
 import com.Travel.dao.pojo.Scenic;
-import com.Travel.dao.pojo.User;
 import com.Travel.server.MyCollectionService;
 import com.Travel.server.RouteService;
 import com.Travel.server.ScenicService;
 import com.Travel.server.UserService;
-import com.Travel.util.JWTUtils;
-import com.Travel.util.UserThreadLocal;
 import com.Travel.vo.*;
-import com.Travel.vo.param.CollectionParam;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.CollectionParam;
+import com.Travel.vo.param.common.PageParam;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MyCollectionServiceimpl extends ServiceImpl<MyCollectionMapper, MyCollection> implements MyCollectionService {

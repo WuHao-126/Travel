@@ -1,4 +1,4 @@
-package com.Travel.vo.param;
+package com.Travel.vo.param.user;
 
 import lombok.Data;
 

@@ -1,11 +1,10 @@
 package com.Travel.controller;
 
 import com.Travel.dao.pojo.Route;
-import com.Travel.dao.pojo.Scenic;
 import com.Travel.server.RouteService;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.PageParam;
-import com.Travel.vo.param.RouteParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.route.RouteParam;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -2,8 +2,8 @@ package com.Travel.server;
 
 import com.Travel.dao.pojo.MyCollection;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.CollectionParam;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.CollectionParam;
+import com.Travel.vo.param.common.PageParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,27 +1,27 @@
 package com.Travel.server.impl;
 
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.StrUtil;
 import com.Travel.dao.mapper.BlogMapper;
+import com.Travel.dao.mapper.UserMapper;
 import com.Travel.dao.pojo.Blog;
 import com.Travel.server.BlogService;
 import com.Travel.server.UserService;
-import com.Travel.util.JWTUtils;
 import com.Travel.vo.*;
-import com.Travel.vo.param.DeleteBlogParam;
-import com.Travel.vo.param.IdParam;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.blog.DeleteBlogParam;
+import com.Travel.vo.param.common.IdParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.common.ScrollResult;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BlogServiceimpl extends ServiceImpl<BlogMapper, Blog> implements BlogService {
@@ -29,6 +29,8 @@ public class BlogServiceimpl extends ServiceImpl<BlogMapper, Blog> implements Bl
     private BlogMapper blogMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Override
@@ -63,18 +65,22 @@ public class BlogServiceimpl extends ServiceImpl<BlogMapper, Blog> implements Bl
     }
 
     @Override
-    public Result addBlog(Blog blog) {
-        String token = stringRedisTemplate.opsForValue().get("token");
-        if(token==null || "".equals(token)){
-            return Result.fail(ErrorCode.NO_LOGIN.getCode(),ErrorCode.NO_LOGIN.getMsg());
+    public Result addBlog(Blog blog,HttpServletRequest servletRequest) {
+        UserVo userVo = userService.selectCurrentLoginUser(servletRequest);
+        if(userVo==null){
+            throw new RuntimeException("用户未登录/用户登录失效");
         }
-        Map<String, Object> map = JWTUtils.checkToken(token);
-        Integer userId = (Integer)map.get("userId");
+        Integer userId = userVo.getId();
         blog.setUser_id(userId);
         blog.setViews(0);
         blog.setCreateTime(new Date());
         boolean save = save(blog);
         if(save){
+            List<Integer> userFansId = userMapper.getUserFansId(userId);
+            //将博客推送到粉丝列表中
+            for (Integer id : userFansId) {
+               stringRedisTemplate.opsForZSet().add(SystemConstants.FEED_INFORMATION_KEY + id, blog.getId().toString(), System.currentTimeMillis());
+            }
             return Result.success(null);
         }else{
             return Result.fail(ErrorCode.INSERT_ERROR.getCode(),ErrorCode.DELETE_ERROR.getMsg());
@@ -140,6 +146,41 @@ public class BlogServiceimpl extends ServiceImpl<BlogMapper, Blog> implements Bl
             return Result.success(true);
         }
         return Result.fail(ErrorCode.DELETE_ERROR.getCode(),ErrorCode.DELETE_ERROR.getMsg());
+    }
+
+    @Override
+    public Result feedBlog(Long max, Integer offset, Integer pageSize, HttpServletRequest servletRequest) {
+        UserVo userVo = userService.selectCurrentLoginUser(servletRequest);
+        if(userVo==null){
+            throw new RuntimeException("用户未登录/用户登录失效");
+        }
+        String key=SystemConstants.FEED_INFORMATION_KEY+userVo.getId();
+        Set<ZSetOperations.TypedTuple<String>> typedTuples =
+                stringRedisTemplate.opsForZSet().reverseRangeByScoreWithScores(key, 0, max, offset, pageSize);
+        if(typedTuples.isEmpty()){
+            return Result.success(null);
+        }
+        List<String> blogIdLsit=new ArrayList<>(typedTuples.size());
+        long minTime=0l;
+        int os=1;
+        for (ZSetOperations.TypedTuple<String> typedTuple : typedTuples) { //5 4 4 3 3 2
+            String value = typedTuple.getValue();
+            long score = typedTuple.getScore().longValue();
+            blogIdLsit.add(value);
+            if(minTime==score){
+               os++;
+            }else{
+                minTime=Long.parseLong(value);
+                os=1;
+            }
+        }
+        String idStr = StrUtil.join(",", blogIdLsit);
+        List<Blog> blogs = query().in("id", blogIdLsit).last("ORDER BY FIELD(id," + idStr + ")").list();
+        ScrollResult<Blog> scrollResult=new ScrollResult<>();
+        scrollResult.setList(blogs);
+        scrollResult.setMinTime(minTime);
+        scrollResult.setOffset(os);
+        return Result.success(scrollResult);
     }
 
     public List<BlogVo> copyList(List<Blog> blogList){

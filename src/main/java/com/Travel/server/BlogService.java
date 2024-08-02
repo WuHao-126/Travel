@@ -3,9 +3,9 @@ package com.Travel.server;
 import com.Travel.dao.pojo.Blog;
 import com.Travel.vo.BlogVo;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.DeleteBlogParam;
-import com.Travel.vo.param.IdParam;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.blog.DeleteBlogParam;
+import com.Travel.vo.param.common.IdParam;
+import com.Travel.vo.param.common.PageParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ public interface BlogService extends IService<Blog> {
      * @param blog
      * @return
      */
-    Result addBlog(Blog blog);
+    Result addBlog(Blog blog,HttpServletRequest servletRequest);
 
     /**
      * 根据名称搜索景区信息
@@ -66,4 +66,6 @@ public interface BlogService extends IService<Blog> {
     Result selectBlogByUserId(IdParam idParam);
 
     Result deleteBlog(DeleteBlogParam deleteBlogParam, HttpServletRequest request);
+
+    Result feedBlog(Long max, Integer offset,Integer pageSize,HttpServletRequest servletRequest);
 }

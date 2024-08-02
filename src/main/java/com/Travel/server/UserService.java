@@ -3,7 +3,11 @@ package com.Travel.server;
 import com.Travel.dao.pojo.User;
 import com.Travel.vo.Result;
 import com.Travel.vo.UserVo;
-import com.Travel.vo.param.*;
+import com.Travel.vo.param.common.IdParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.user.UpdateUserParam;
+import com.Travel.vo.param.user.UserLoginRequest;
+import com.Travel.vo.param.user.UserParam;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +69,7 @@ public interface UserService extends IService<User> {
      * @param servletRequest
      * @return
      */
-    Result selectUser(UserLoginRequest userLoginRequest, HttpServletRequest servletRequest);
+    Result UserLogin(UserLoginRequest userLoginRequest, HttpServletRequest servletRequest);
 
     Result registerUser(User user);
 
@@ -111,4 +115,6 @@ public interface UserService extends IService<User> {
     Result getUserFansList(IdParam idParam);
 
     Result getUserConcernList(IdParam idParam);
+
+    Result getCommonConcern(IdParam idParam, Integer currentUserId);
 }

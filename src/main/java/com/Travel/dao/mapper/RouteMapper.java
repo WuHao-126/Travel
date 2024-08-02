@@ -1,7 +1,7 @@
 package com.Travel.dao.mapper;
 
 import com.Travel.dao.pojo.Route;
-import com.Travel.vo.param.RouteParam;
+import com.Travel.vo.param.route.RouteParam;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

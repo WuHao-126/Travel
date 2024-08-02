@@ -1,10 +1,11 @@
 package com.Travel.controller;
 
 import com.Travel.dao.pojo.Information;
-import com.Travel.dao.pojo.Scenic;
 import com.Travel.server.InformationService;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.IdParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.information.InformationQuery;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class InformationController {
     private InformationService informationService;
 
     /**
-     * TODO 添加资讯
+     *  添加资讯
      * @param information
      * @return
      */
@@ -26,58 +27,16 @@ public class InformationController {
         return informationService.addInformation(information);
     }
 
-    /**
-     * TODO 搜索所有资讯并分页
-     * @param pageParam
-     * @return
-     */
-    @PostMapping("/page")
-    public Result selectAllInformation(@RequestBody PageParam pageParam){
-        return informationService.selectAllInformation(pageParam);
+    @PostMapping("search")
+    public Result searchInformation(@RequestBody InformationQuery informationQuery){
+        if(informationQuery==null){
+            throw new RuntimeException("资讯搜索参数为空");
+        }
+        return informationService.searchInformation(informationQuery);
     }
 
     /**
-     * TODO 站内资讯
-     * @param pageParam
-     * @return
-     */
-    @PostMapping("/within")
-    public Result selectWithinInformation(@RequestBody PageParam pageParam){
-        return informationService.selectWithinInformation(pageParam);
-    }
-
-    /**
-     * TODO 站外资讯
-     * @param pageParam
-     * @return
-     */
-    @PostMapping("/outside")
-    public Result selectOutsideInformation(@RequestBody PageParam pageParam){
-        return informationService.selectOutsideInformation(pageParam);
-    }
-
-    /**
-     * TODO 根据ID查询资讯
-     * @param id
-     * @return
-     */
-    @GetMapping("/{id}")
-    public Result selectByIdInformation(@PathVariable("id") Integer id){
-        return informationService.selectByIdInformation(id);
-    }
-
-    /**
-     * TODO 根据标题查询
-     * @param title
-     * @return
-     */
-    @GetMapping("/search/{title}")
-    public Result selectTitle(@PathVariable("title") String title){
-        return informationService.selectTitle(title);
-    }
-
-    /**
-     * TODO 热点资讯
+     *  热点资讯
      * @return
      */
     @GetMapping("/hot")
@@ -85,7 +44,7 @@ public class InformationController {
         return informationService.selectHotInformation();
     }
     /**
-     * TODO 删除资讯
+     *  删除资讯
      * @param id
      * @return
      */
@@ -94,8 +53,16 @@ public class InformationController {
         return informationService.deleteInformation(id);
     }
 
+    @PostMapping("/view")
+    public Result addView(@RequestBody IdParam idParam){
+        Integer id = idParam.getId();
+        if(id==null){
+            throw new RuntimeException("资讯添加访问量参数为空");
+        }
+        return informationService.addView(id);
+    }
     /**
-     * TODO 修改资讯
+     *  修改资讯
      * @param information
      * @return
      */

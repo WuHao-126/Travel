@@ -4,18 +4,19 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
 import com.Travel.dao.mapper.UserMapper;
 import com.Travel.dao.pojo.User;
-import com.Travel.exception.BusinessException;
 import com.Travel.server.UserService;
 import com.Travel.util.AlgorithmUtils;
 import com.Travel.vo.*;
-import com.Travel.vo.param.*;
+import com.Travel.vo.param.common.IdParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.user.UpdateUserParam;
+import com.Travel.vo.param.user.UserLoginRequest;
+import com.Travel.vo.param.user.UserParam;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 import org.apache.commons.math3.util.Pair;
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -42,7 +42,7 @@ public class UserServiceimpl extends ServiceImpl<UserMapper, User> implements Us
 
     private static final String PUBLIC_KEY="wuhao";
     @Override
-    public Result selectUser(UserLoginRequest userLoginRequest, HttpServletRequest servletRequest) {
+    public Result UserLogin(UserLoginRequest userLoginRequest, HttpServletRequest servletRequest) {
         String username = userLoginRequest.getUsername();
         String password = userLoginRequest.getPassword();
         String code=userLoginRequest.getCode();
@@ -192,6 +192,7 @@ public class UserServiceimpl extends ServiceImpl<UserMapper, User> implements Us
             user.setGrade(1);
             user.setFans(0);
             user.setExperience(0);
+            user.setTags("[]");
             user.setCreateTime(new Date());
             user.setUpdateTime(new Date());
             //添加
@@ -379,8 +380,9 @@ public class UserServiceimpl extends ServiceImpl<UserMapper, User> implements Us
             boolean flag=userMapper.cancelConcern(loginUserId, concernUserId);
             if (flag){
                 user.setFans(user.getFans()-1);
+                Long remove = stringRedisTemplate.opsForSet().remove(SystemConstants.USER_FOLLOWS_KEY + loginUserId, loginUserId);
                 boolean b = updateById(user);
-                if(b){
+                if(b && remove>0){
                     return Result.success("取消关注");
                 }
             }
@@ -389,8 +391,10 @@ public class UserServiceimpl extends ServiceImpl<UserMapper, User> implements Us
         boolean flag=userMapper.addConcernUser(concernUserId,loginUserId);
         if(flag){
             user.setFans(user.getFans()+1);
+            Long add = stringRedisTemplate.opsForSet().add(SystemConstants.USER_FOLLOWS_KEY + loginUserId, String.valueOf(concernUserId));
+            stringRedisTemplate.expire(SystemConstants.USER_FOLLOWS_KEY + loginUserId, 30, TimeUnit.DAYS);
             boolean b = updateById(user);
-            if(b){
+            if(b && add>0){
                 return Result.success("关注成功");
             }
         }
@@ -435,6 +439,37 @@ public class UserServiceimpl extends ServiceImpl<UserMapper, User> implements Us
         }
         List<UserVo> userList=userMapper.getUserConcern(id,currentPage,pageSize);
         return Result.success(userList);
+    }
+
+    @Override
+    public Result getCommonConcern(IdParam idParam, Integer currentUserId) {
+        Integer id = idParam.getId();
+        if(id<=0){
+            throw new RuntimeException("共同关注查询列表错误 id:"+id);
+        }
+        // 判断redis中是否还有数据
+        Boolean oneflag = stringRedisTemplate.hasKey(SystemConstants.USER_FOLLOWS_KEY + id);
+        if(!oneflag){
+            List<Integer> userFansId = userMapper.getUserFansId(id);
+            for (Integer integer : userFansId) {
+                stringRedisTemplate.opsForSet().add(SystemConstants.USER_FOLLOWS_KEY+id, String.valueOf(integer));
+            }
+        }
+        Boolean twoflag = stringRedisTemplate.hasKey(SystemConstants.USER_FOLLOWS_KEY + currentUserId);
+        if(!twoflag){
+            List<Integer> userFansId = userMapper.getUserFansId(currentUserId);
+            for (Integer integer : userFansId) {
+                stringRedisTemplate.opsForSet().add(SystemConstants.USER_FOLLOWS_KEY+currentUserId, String.valueOf(integer));
+            }
+        }
+        Set<String> intersect = stringRedisTemplate.opsForSet().intersect(SystemConstants.USER_FOLLOWS_KEY + currentUserId, SystemConstants.USER_FOLLOWS_KEY + id);
+        List<UserVo>list=new ArrayList<>();
+        for (String s : intersect) {
+            User user = query().eq("id",s).one();
+            UserVo userVo = copy(user);
+            list.add(userVo);
+        }
+        return Result.success(list);
     }
 
     public List<UserVo> copyList(List<User> list){

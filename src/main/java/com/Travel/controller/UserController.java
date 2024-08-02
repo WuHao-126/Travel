@@ -1,21 +1,27 @@
 package com.Travel.controller;
 
 import cn.hutool.core.util.RandomUtil;
+import com.Travel.annotation.AuthCheck;
 import com.Travel.dao.pojo.User;
 import com.Travel.server.UserService;
-import com.Travel.vo.ErrorCode;
 import com.Travel.vo.Result;
 import com.Travel.vo.UserVo;
-import com.Travel.vo.param.*;
+import com.Travel.vo.param.common.IdParam;
+import com.Travel.vo.param.common.PageParam;
+import com.Travel.vo.param.scenic.ScenicQuery;
+import com.Travel.vo.param.user.UpdateUserParam;
+import com.Travel.vo.param.user.UserLoginRequest;
+import com.Travel.vo.param.user.UserParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -66,10 +72,8 @@ public class UserController {
      */
     @PostMapping("/select")
     public Result selectUser(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest servletRequest){
-        return userService.selectUser(userLoginRequest,servletRequest);
+        return userService.UserLogin(userLoginRequest,servletRequest);
     }
-
-
     /**
      * 根据ID查询用户
      * @param id
@@ -80,7 +84,11 @@ public class UserController {
         return userService.selectByIdUser(id);
     }
 
-
+    /**
+     * 根据id搜索用户
+     * @param id
+     * @return
+     */
     @GetMapping("/id/{id}")
     public UserVo selectByIdUserVo(@PathVariable("id") Integer id){
         return userService.selectByIdUserVo(id);
@@ -127,7 +135,7 @@ public class UserController {
         return userService.outLogin(servletRequest);
     }
     /**
-     * TODO 修改用户信息(后台)
+     * 修改用户信息(后台)
      * @param user
      * @return
      */
@@ -137,7 +145,7 @@ public class UserController {
     }
 
     /**
-     * TODO 修改用户信息(前台)
+     * 修改用户信息(前台)
      * @param updateUserParam
      * @return
      */
@@ -257,5 +265,15 @@ public class UserController {
     @PostMapping("/concernlist")
     public Result getUserConcernList(@RequestBody IdParam idParam,HttpServletRequest servletRequest){
         return userService.getUserConcernList(idParam);
+    }
+
+    @PostMapping("/common/follow")
+    public Result getCommonConcern(@RequestBody IdParam idParam,HttpServletRequest servletRequest){
+        UserVo userVo = userService.selectCurrentLoginUser(servletRequest);
+        if(userVo==null){
+            throw new RuntimeException("未登录/登陆失效");
+        }
+        Integer currentUserId = userVo.getId();
+        return userService.getCommonConcern(idParam,currentUserId);
     }
 }

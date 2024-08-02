@@ -2,8 +2,8 @@ package com.Travel.controller;
 
 import com.Travel.server.MyCollectionService;
 import com.Travel.vo.Result;
-import com.Travel.vo.param.CollectionParam;
-import com.Travel.vo.param.PageParam;
+import com.Travel.vo.param.common.CollectionParam;
+import com.Travel.vo.param.common.PageParam;
 import io.swagger.annotations.Api;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;

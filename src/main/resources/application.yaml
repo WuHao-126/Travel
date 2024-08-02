@@ -2,6 +2,7 @@ spring:
   redis:
     host: localhost
     port: 6379
+    password: 12345678
   datasource:
     url: jdbc:mysql://localhost:3306/travel?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
@@ -13,12 +14,15 @@ spring:
 server:
   port: 8003
 
-qiniu:
-  accessKey: 1JqiPI4GqzwD0zmereMXlz9s3OAf-QEdRO0qHDgp
-  accessSecretKey: YfPXZe21CQ3bCKljv8ymuhGuHHG_5MkchW2y4oxt
-
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: false
 
+minio:
+  # minio通信地址
+  endpoint: http://localhost:9000
+  # minio登录用户名
+  account: minioadmin
+  # minio登录密码
+  password: minioadmin

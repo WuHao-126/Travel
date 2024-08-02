@@ -1,6 +1,5 @@
-package com.Travel.vo.param;
+package com.Travel.vo.param.blog;
 
-import com.Travel.dao.pojo.User;
 import lombok.Data;
 
 @Data

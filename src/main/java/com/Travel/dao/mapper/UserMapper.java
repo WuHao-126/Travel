@@ -2,7 +2,7 @@ package com.Travel.dao.mapper;
 
 import com.Travel.dao.pojo.User;
 import com.Travel.vo.UserVo;
-import com.Travel.vo.param.UpdateUserParam;
+import com.Travel.vo.param.user.UpdateUserParam;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,4 +24,6 @@ public interface UserMapper extends BaseMapper<User> {
     List<UserVo> getUserFans(@Param("id") Integer id,@Param("currentPage") Integer currentPage,@Param("pageSize") Integer pageSize);
 
     List<UserVo> getUserConcern(@Param("id") Integer id,@Param("currentPage") Integer currentPage,@Param("pageSize") Integer pageSize);
+
+    List<Integer> getUserFansId(Integer id);
 }

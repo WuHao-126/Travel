@@ -1,4 +1,4 @@
-package com.Travel.vo.param;
+package com.Travel.vo.param.user;
 
 import lombok.Data;
 
@@ -7,4 +7,5 @@ public class UpdateUserParam {
     private Integer id;
     private String userPhoto;
     private String nickName;
+    private String description;
 }

@@ -15,7 +15,7 @@
         update tb_admin set experience=experience+10 where id=#{id};
     </update>
     <update id="updateUserInformation">
-        update tb_admin set nickName=#{nickName},userPhoto=#{userPhoto} where id=#{id}
+        update tb_admin set nickName=#{nickName},userPhoto=#{userPhoto},description=#{description} where id=#{id}
     </update>
     <update id="updateTags">
         update tb_admin set tags=#{tagsJson} where id=#{id}
@@ -31,5 +31,8 @@
     </select>
     <select id="getUserConcern" resultType="com.Travel.vo.UserVo">
         select * from tb_admin where id in (select concern_Id from tb_concern where userId =#{id}) limit #{currentPage},#{pageSize}
+    </select>
+    <select id="getUserFansId" resultType="java.lang.Integer">
+        select userId from tb_concern where concern_Id=#{id}
     </select>
 </mapper>
